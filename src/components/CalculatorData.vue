@@ -1,6 +1,10 @@
 <template>
     <div class="calculator">
-      <div class="display">{{ current || '0' }}</div>
+      <div class="display">
+  <div class="expression" v-if="expression">{{ expression }}</div>
+  <div>{{ current || '0' }}</div>
+</div>
+
       
       <div class="buttons">
         <button @click="clear">C</button>
@@ -38,7 +42,8 @@
         current: '',
         previous: null,
         operator: null,
-        operatorClicked: false
+        operatorClicked: false,
+        expression: ''
       }
     },
     methods: {
@@ -67,26 +72,29 @@
           this.append('.');
         }
       },
-      setPrevious() {
-        this.previous = this.current;
-        this.operatorClicked = true;
-      },
+      setPrevious(operatorSymbol) {
+  this.previous = this.current;
+  this.expression = `${this.current} ${operatorSymbol}`; // show expression
+  this.operatorClicked = true;
+},
+
       divide() {
-        this.operator = (a, b) => a / b;
-        this.setPrevious();
-      },
-      multiply() {
-        this.operator = (a, b) => a * b;
-        this.setPrevious();
-      },
-      subtract() {
-        this.operator = (a, b) => a - b;
-        this.setPrevious();
-      },
-      add() {
-        this.operator = (a, b) => a + b;
-        this.setPrevious();
-      },
+  this.operator = (a, b) => a / b;
+  this.setPrevious('÷');
+},
+multiply() {
+  this.operator = (a, b) => a * b;
+  this.setPrevious('×');
+},
+subtract() {
+  this.operator = (a, b) => a - b;
+  this.setPrevious('-');
+},
+add() {
+  this.operator = (a, b) => a + b;
+  this.setPrevious('+');
+},
+
       equal() {
         if (this.operator && this.previous) {
           this.current = `${this.operator(
@@ -95,6 +103,7 @@
           )}`;
           this.previous = null;
           this.operator = null;
+          this.expression = '';
         }
       }
     }
@@ -109,6 +118,12 @@
     border: 1px solid #ccc;
     border-radius: 5px;
   }
+  .expression {
+  font-size: 14px;
+  color: #888;
+  text-align: right;
+}
+
   
   .display {
     background-color: #f8f9fa;
