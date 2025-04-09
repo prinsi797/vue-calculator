@@ -43,7 +43,9 @@
   </div>
 </template>
 
+
 <script>
+
 export default {
   name: 'CalculatorData',
   data() {
